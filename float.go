@@ -1,6 +1,7 @@
-package token
+package pattern
 
 import "math"
+import "github.com/hydra13142/pattern/DFA"
 
 // 浮点数
 func Float(data []byte, end bool) (i int, r interface{}) {
@@ -10,11 +11,11 @@ func Float(data []byte, end bool) (i int, r interface{}) {
 	)
 	Int := func(data []byte) (i, j int) {
 		for l := len(data); i < l; i++ {
-			c := dec(data[i])
-			if c < 0 {
+			if c := data[i]; c < '0' || c > '9' {
 				break
+			} else {
+				j = j*10 + int(c-'0')
 			}
-			j = j*10 + c
 		}
 		if i >= len(data) {
 			return 0, 0
@@ -87,7 +88,7 @@ func Float(data []byte, end bool) (i int, r interface{}) {
 			goto exit
 		}
 	}
-	if data[i] == '.' || u_w.Get(data[i]) {
+	if data[i] == '.' || DFA.Words.GetBit(int(data[i])) {
 		return -1, nil
 	}
 	goto done

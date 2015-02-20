@@ -1,4 +1,4 @@
-package token
+package pattern
 
 // 单字符（单引号包围）
 func QuoteByte(data []byte, end bool) (int, interface{}) {
@@ -9,17 +9,13 @@ func QuoteByte(data []byte, end bool) (int, interface{}) {
 	if l < 2 {
 		return 0, nil
 	}
-	i, c := escape(data[1:])
-	if i < 0 {
-		i, c = 1, data[1]
-		if c == '\'' {
-			return -1, nil
-		}
+	i, c := Alone(data[1:], end)
+	if i <= 0 {
+		return i, nil
 	}
-	if i == 0 || l < i+2 {
+	if i+1 >= l {
 		return 0, nil
-	}
-	if data[i+1] != '\'' {
+	} else if data[i+1] != '\'' {
 		return -1, nil
 	}
 	return i + 2, c

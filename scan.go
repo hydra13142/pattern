@@ -1,7 +1,7 @@
 // token包用于方便的进行token的提取，让使用者专注于语法层面。
 // 本包提供了大量预定义的token提取规则函数，可以提取多种token，也可以自定义token提取函数。
 // 使用io.Reader和多个token提取函数，即可创建一个token扫描器，可以依次提取出token来。
-package token
+package pattern
 
 import (
 	"errors"

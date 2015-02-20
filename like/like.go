@@ -1,14 +1,15 @@
-package glob
+package like
 
 import (
-	"usual/pattern/token"
+	"github.com/hydra13142/pattern"
+	"github.com/hydra13142/pattern/DFA"
 	"strings"
 )
 
 type element struct {
 	kind bool
 	char byte
-	unit token.Unit
+	unit DFA.Unit
 }
 
 // 采用like匹配的对象：'_'匹配1个任意字符，'%'匹配零到多个任意字符，支持'\w'格式预定义字符集和'[]'格式自定义字符集
@@ -20,12 +21,12 @@ type Like struct {
 
 // 创建一个Like对象
 func Compile(rule string) (*Like, error) {
-	s := token.NewScanner(strings.NewReader(rule), token.Class, token.Escape, token.Byte)
+	s := pattern.NewScanner(strings.NewReader(rule), pattern.Group, pattern.Escape, pattern.Byte)
 	a, b := [][]*element{}, []*element{}
 	for s.Next() {
 		i, r := s.Token()
 		if i == 0 {
-			b = append(b, &element{kind: true, unit: r.(token.Unit)})
+			b = append(b, &element{kind: true, unit: r.(DFA.Unit)})
 			continue
 		}
 		c := r.(byte)
@@ -45,7 +46,7 @@ func Compile(rule string) (*Like, error) {
 
 func (r *Like) matchByte(e *element, b byte) bool {
 	if e.kind {
-		return e.unit.Get(b)
+		return e.unit.GetBit(int(b))
 	}
 	a := e.char
 	if a == '_' || a == b {
