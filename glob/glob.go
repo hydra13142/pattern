@@ -1,7 +1,7 @@
 package glob
 
 import (
-	"github.com/hydra13142/pattern"
+	"github.com/hydra13142/pattern/token"
 	"strings"
 )
 
@@ -14,7 +14,7 @@ type Glob struct {
 
 // 创建一个Glob对象
 func Compile(rule string) (*Glob, error) {
-	s := pattern.NewScanner(strings.NewReader(rule), pattern.Escape, pattern.Byte)
+	s := token.NewScanner(strings.NewReader(rule), token.Escape, token.Byte)
 	a, b := []string{}, []byte{}
 	for s.Next() {
 		i, r := s.Token()

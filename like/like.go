@@ -1,7 +1,7 @@
 package like
 
 import (
-	"github.com/hydra13142/pattern"
+	"github.com/hydra13142/pattern/token"
 	"github.com/hydra13142/pattern/DFA"
 	"strings"
 )
@@ -21,7 +21,7 @@ type Like struct {
 
 // 创建一个Like对象
 func Compile(rule string) (*Like, error) {
-	s := pattern.NewScanner(strings.NewReader(rule), pattern.Group, pattern.Escape, pattern.Byte)
+	s := token.NewScanner(strings.NewReader(rule), token.Group, token.Escape, token.Byte)
 	a, b := [][]*element{}, []*element{}
 	for s.Next() {
 		i, r := s.Token()

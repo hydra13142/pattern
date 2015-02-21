@@ -1,4 +1,4 @@
-package pattern
+package token
 
 import "math"
 import "github.com/hydra13142/pattern/DFA"

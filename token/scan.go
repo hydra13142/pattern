@@ -1,14 +1,14 @@
 // token包用于方便的进行token的提取，让使用者专注于语法层面。
 // 本包提供了大量预定义的token提取规则函数，可以提取多种token，也可以自定义token提取函数。
 // 使用io.Reader和多个token提取函数，即可创建一个token扫描器，可以依次提取出token来。
-package pattern
+package token
 
 import (
 	"errors"
 	"io"
 )
 
-// 提取token的函数类型，第一个返回值为消费掉的字节数
+// 提取token的函数类型，第一个返回值>0表示成功匹配吃掉的字节数，=0表示字节不够，<0表示匹配失败
 type TokenFunc func([]byte, bool) (int, interface{})
 
 // 保管扫描器状态

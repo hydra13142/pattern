@@ -1,4 +1,4 @@
-package pattern
+package token
 
 // 顺序依次匹配
 func Series(takes ...func([]byte, bool) (int, interface{})) func([]byte, bool) (int, interface{}) {

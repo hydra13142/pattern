@@ -1,4 +1,4 @@
-package pattern
+package token
 
 // 单字符（单引号包围）
 func QuoteByte(data []byte, end bool) (int, interface{}) {
