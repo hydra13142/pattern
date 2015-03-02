@@ -96,7 +96,7 @@ func None(a Unit) bool {
 	return true
 }
 
-// 交集是否非空
+// 是否相同集合
 func Same(a, b Unit) bool {
 	for i, l := 0, len(a); i < l; i++ {
 		if a[i] != b[i] {
