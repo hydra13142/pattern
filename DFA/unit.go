@@ -1,6 +1,6 @@
 package DFA
 
-// 表示ASCII字符（范围0-255）的集合
+// 表示有限范围（通常是ASCII字符，0-255）的集合
 type Unit []uint32
 
 // 预定义字符组
