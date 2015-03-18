@@ -42,37 +42,46 @@ func (s *Scanner) Reset(r io.Reader) {
 func (s *Scanner) Next() bool {
 	var (
 		d = make([]byte, 1024)
+		p = s.err == io.EOF
 		n int
-		p = (s.err == io.EOF)
 	)
-	if len(s.dat) != 0 {
-		goto took
-	}
-more:
-	if s.err != nil {
-		if len(s.dat) != 0 {
-			s.err = errors.New("incompleted token")
+	if len(s.dat) == 0 {
+		if s.err != nil {
+			return false
 		}
-		return false
-	}
-	n, s.err = s.Read(d)
-	if n == 0 {
-		s.err = errors.New("read with nothing")
-		return false
-	}
-	s.dat = append(s.dat, d[:n]...)
-	p = (s.err == io.EOF)
-took:
-	for i, f := range s.fac {
-		n, s.vlu = f(s.dat, p)
+		n, s.err = s.Read(d)
+		p = s.err == io.EOF
 		if n == 0 {
-			goto more
+			return false
 		}
-		if n > 0 {
-			s.idx = i
-			s.dat = s.dat[n:]
-			return true
+		s.dat = append(s.dat, d[:n]...)
+	}
+	for i, l := 0, len(s.fac); ; {
+		for i = 0; i < l; i++ {
+			n, s.vlu = s.fac[i](s.dat, p)
+			if n == 0 {
+				break
+			}
+			if n > 0 {
+				s.idx = i
+				s.dat = s.dat[n:]
+				return true
+			}
 		}
+		if i == l {
+			break
+		}
+		if s.err != nil {
+			s.err = errors.New("incompleted token")
+			return false
+		}
+		n, s.err = s.Read(d)
+		if n == 0 {
+			s.err = errors.New("incompleted token")
+			return false
+		}
+		s.dat = append(s.dat, d[:n]...)
+		p = (s.err == io.EOF)
 	}
 	s.err = errors.New("can't identify token")
 	return false

@@ -2,6 +2,7 @@ package token
 
 import "github.com/hydra13142/pattern/DFA"
 
+// 匹配DFA正则，返回[]byte
 func TokenDFA(s string) (func([]byte, bool) (int, interface{}), error) {
 	dfa, err := DFA.NewDFA(s)
 	if err != nil {
@@ -9,14 +10,14 @@ func TokenDFA(s string) (func([]byte, bool) (int, interface{}), error) {
 	}
 	return func(data []byte, end bool) (int, interface{}) {
 		i, j, k, l := 0, 0, -1, len(data)
+		if dfa.Over[0] {
+			k = 0
+		}
 		for j < l {
-			c := data[j]
-			k := dfa.Char[c]
-			j++
-			if i = dfa.Move[i][k]; i < 0 {
+			if i = dfa.Move[i][dfa.Char[data[j]]]; i < 0 {
 				break
 			}
-			if dfa.Over[i] {
+			if j++; dfa.Over[i] {
 				k = j
 			}
 		}
@@ -25,12 +26,12 @@ func TokenDFA(s string) (func([]byte, bool) (int, interface{}), error) {
 		}
 		if k > 0 {
 			return k, data[:k]
-		} else {
-			return -1, nil
 		}
+		return -1, nil
 	}, nil
 }
 
+// 匹配字符串字面量，返回[]byte
 func TokenLiteral(s string) func([]byte, bool) (int, interface{}) {
 	b := []byte(s)
 	return func(data []byte, end bool) (int, interface{}) {

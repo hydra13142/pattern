@@ -44,3 +44,21 @@ func QuoteString(data []byte, end bool) (i int, q interface{}) {
 	}
 	return i + 1, string(data[1:i])
 }
+
+// 空白
+func Space(data []byte, end bool) (i int, q interface{}) {
+	i, l := 0, len(data)
+loop:
+	for i < l {
+		switch data[i] {
+		case '\r', '\n', '\t', '\v', '\x20':
+			i++
+		default:
+			break loop
+		}
+	}
+	if i == 0 {
+		return -1, nil
+	}
+	return i, nil
+}

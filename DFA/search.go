@@ -19,14 +19,14 @@ func NewDFA(s string) (*DFA, error) {
 
 func (this *DFA) test(data []byte) int {
 	i, j, k, l := 0, 0, -1, len(data)
+	if this.Over[0] {
+		k = 0
+	}
 	for j < l {
-		c := data[j]
-		k := this.Char[c]
-		j++
-		if i = this.Move[i][k]; i < 0 {
+		if i = this.Move[i][this.Char[data[j]]]; i < 0 {
 			break
 		}
-		if this.Over[i] {
+		if j++; this.Over[i] {
 			k = j
 		}
 	}
